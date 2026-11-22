@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Special Surprise For You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg-gradient-1: #fff0f5;
+      --bg-gradient-2: #ffe4ec;
+      --bg-gradient-3: #ffd6e0;
+      --primary: #e11d48;
+      --primary-hover: #be123c;
+      --primary-light: #ffe4e6;
+      --gold: #d97706;
+      --text-dark: #3f1d2b;
+      --text-muted: #7f4f61;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --shadow-soft: 0 24px 60px rgba(225, 29, 72, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top left, #fff5f7, transparent 50%),
+        radial-gradient(circle at bottom right, #fecdd3, transparent 50%),
+        linear-gradient(135deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3));
+      color: var(--text-dark);
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      padding: 24px 16px;
+    }
+
+    /* Sound Toggle Button */
+    .sound-toggle {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid #fecdd3;
+      color: var(--text-dark);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 6px 18px rgba(225, 29, 72, 0.12);
+      transition: all 0.2s ease;
+    }
+
+    .sound-toggle:hover {
+      background: #fff;
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    /* Floating ambient hearts & petals background */
+    .floating-ambient {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-float {
+      position: absolute;
+      bottom: -50px;
+      animation: floatUp linear infinite;
+      user-select: none;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.85;
+      }
+      50% {
+        transform: translateY(-55vh) translateX(20px) rotate(180deg) scale(1);
+      }
+      85% {
+        opacity: 0.75;
+      }
+      100% {
+        transform: translateY(-115vh) translateX(-15px) rotate(360deg) scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    /* Fireworks Canvas */
+    #fireworks-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+      margin: auto;
+    }
+
+    /* Screen Transitions */
+    .screen {
+      display: none;
+      animation: fadeScaleIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeScaleIn {
+      from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Step 1: Surprise Button */
+    .surprise-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 20px;
+    }
+
+    .surprise-subtitle {
+      font-family: "Great Vibes", cursive;
+      font-size: 2.2rem;
+      color: var(--primary);
+      opacity: 0.9;
+    }
+
+    .gift-icon {
+      font-size: 4.5rem;
+      animation: bounceGift 2.2s infinite ease-in-out;
+      filter: drop-shadow(0 12px 20px rgba(225, 29, 72, 0.25));
+      cursor: pointer;
+    }
+
+    @keyframes bounceGift {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-12px) rotate(-6deg); }
+      75% { transform: translateY(-6px) rotate(6deg); }
+    }
+
+    .btn-surprise {
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      color: #ffffff;
+      border: none;
+      padding: 20px 44px;
+      font-size: 1.35rem;
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 14px 32px rgba(225, 29, 72, 0.42), 0 0 0 0 rgba(225, 29, 72, 0.5);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      animation: pulseRing 2s infinite;
+      letter-spacing: 0.4px;
+    }
+
+    .btn-surprise:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 18px 38px rgba(225, 29, 72, 0.52);
+    }
+
+    .btn-surprise:active {
+      transform: scale(0.98);
+    }
+
+    @keyframes pulseRing {
+      0% { box-shadow: 0 14px 32px rgba(225, 29, 72, 0.42), 0 0 0 0 rgba(225, 29, 72, 0.5); }
+      70% { box-shadow: 0 14px 32px rgba(225, 29, 72, 0.42), 0 0 0 20px rgba(225, 29, 72, 0); }
+      100% { box-shadow: 0 14px 32px rgba(225, 29, 72, 0.42), 0 0 0 0 rgba(225, 29, 72, 0); }
+    }
+
+    /* Step 2: Proposal Card */
+    .proposal-box {
+      background: var(--card-bg);
+      backdrop-filter: blur(14px);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      padding: 40px 30px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .proposal-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #fda4af, #e11d48, #fda4af);
+    }
+
+    .ring-emblem {
+      font-size: 3.4rem;
+      margin-bottom: 8px;
+      display: inline-block;
+      animation: sparkleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes sparkleFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-7px) scale(1.08); }
+    }
+
+    .love-note {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+
+    .proposal-title {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+
+    /* Radio Button Group */
+    .radio-group {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .radio-option {
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .radio-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .radio-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border-radius: 18px;
+      border: 2px solid #fecdd3;
+      background: #fff;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .radio-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #fda4af;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .radio-circle::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      transform: scale(0);
+      transition: transform 0.2s ease;
+    }
+
+    .radio-option:hover .radio-card {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-card {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      box-shadow: 0 8px 22px rgba(225, 29, 72, 0.2);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-card .radio-circle {
+      border-color: var(--primary);
+    }
+
+    .radio-option input[type="radio"]:checked + .radio-card .radio-circle::after {
+      transform: scale(1);
+    }
+
+    /* Dynamic Reaction Area */
+    .reaction-area {
+      min-height: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .yes-celebration {
+      display: none;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #fecdd3;
+    }
+
+    .yes-celebration.visible {
+      display: block;
+    }
+
+    .celebration-text {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 18px;
+    }
+
+    .btn-next-journey {
+      background: linear-gradient(135deg, #f43f5e, #be123c);
+      color: #fff;
+      border: none;
+      padding: 15px 34px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(225, 29, 72, 0.32);
+      transition: all 0.25s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-next-journey:hover {
+      transform: translateY(-2px) scale(1.03);
+      background: linear-gradient(135deg, #e11d48, #9f1239);
+      box-shadow: 0 14px 30px rgba(225, 29, 72, 0.45);
+    }
+
+    /* Heartbreak Container */
+    .no-heartbreak {
+      display: none;
+      animation: shakeHeart 0.55s ease-in-out;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed #fecdd3;
+    }
+
+    .no-heartbreak.visible {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .heartbreak-svg {
+      width: 112px;
+      height: 112px;
+      filter: drop-shadow(0 8px 18px rgba(136, 19, 55, 0.22));
+    }
+
+    .heartbreak-caption {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    @keyframes shakeHeart {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px) rotate(-3deg); }
+      40% { transform: translateX(8px) rotate(3deg); }
+      60% { transform: translateX(-6px) rotate(-2deg); }
+      80% { transform: translateX(6px) rotate(2deg); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Step 3: Final Keepsake Screen */
+    .final-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      border-radius: 32px;
+      padding: 34px 26px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Polaroid Frame */
+    .polaroid-frame {
+      background: #ffffff;
+      padding: 12px 12px 24px 12px;
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(225, 29, 72, 0.18), 0 2px 8px rgba(0, 0, 0, 0.06);
+      transform: rotate(-1.5deg);
+      transition: transform 0.3s ease;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 310px;
+    }
+
+    .polaroid-frame:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+
+    .photo-box {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4.3;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffe4e6;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .polaroid-caption {
+      font-family: "Great Vibes", cursive;
+      font-size: 1.65rem;
+      color: var(--text-dark);
+      margin-top: 10px;
+      line-height: 1;
+    }
+
+    .upload-photo-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--text-dark);
+      border: 1px solid #fecdd3;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .upload-photo-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .save-date-label {
+      text-transform: uppercase;
+      letter-spacing: 3.5px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .see-you-text {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 2.55rem;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    /* Countdown Timer */
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      width: 100%;
+      max-width: 360px;
+      margin-bottom: 14px;
+    }
+
+    .countdown-item {
+      background: #fff5f7;
+      border: 1px solid #fecdd3;
+      border-radius: 14px;
+      padding: 10px 6px;
+    }
+
+    .countdown-num {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+      line-height: 1.2;
+    }
+
+    .countdown-unit {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .heart-divider {
+      margin-top: 6px;
+      color: var(--primary);
+      font-size: 1.2rem;
+      letter-spacing: 8px;
+    }
+
+    @media (max-width: 480px) {
+      .proposal-title {
+        font-size: 2.4rem;
+      }
+      .radio-group {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .radio-card {
+        justify-content: center;
+      }
+      .see-you-text {
+        font-size: 2.15rem;
+      }
+      .countdown-grid {
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Optional Romantic Chime Sound Toggle -->
+  <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound effects">
+    <span id="sound-icon">🔊</span>
+    <span id="sound-label">Sound On</span>
+  </button>
+
+  <!-- Ambient Floating Hearts & Rose Petals -->
+  <div class="floating-ambient" id="floating-ambient"></div>
+
+  <!-- Celebratory Fireworks Canvas -->
+  <canvas id="fireworks-canvas"></canvas>
+
+  <main class="container">
+    <!-- SCREEN 1: Click to Surprise -->
+    <section id="screen-surprise" class="screen active">
+      <div class="surprise-wrapper">
+        <p class="surprise-subtitle">I have something special to ask you...</p>
+        <div class="gift-icon" id="gift-emoji">🎁</div>
+        <button id="btn-surprise" class="btn-surprise">Click to Surprise</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: Will you marry me? -->
+    <section id="screen-proposal" class="screen">
+      <div class="proposal-box">
+        <div class="ring-emblem">💍</div>
+        <p class="love-note">Every moment with you feels like magic...</p>
+        <h1 class="proposal-title">Will you marry me?</h1>
+
+        <div class="radio-group" role="radiogroup" aria-label="Proposal response">
+          <label class="radio-option">
+            <input type="radio" name="proposal_answer" value="yes" id="radio-yes" />
+            <span class="radio-card">
+              <span class="radio-circle"></span>
+              <span>Yes</span>
+            </span>
+          </label>
+
+          <label class="radio-option">
+            <input type="radio" name="proposal_answer" value="no" id="radio-no" />
+            <span class="radio-card">
+              <span class="radio-circle"></span>
+              <span>No</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="reaction-area">
+          <!-- Yes Reaction -->
+          <div id="yes-reaction" class="yes-celebration">
+            <p class="celebration-text">You just made me the happiest person alive! 🎉💖</p>
+            <button id="btn-next-journey" class="btn-next-journey">Let’s walk into forever together →</button>
+          </div>
+
+          <!-- No Reaction (Heartbreak Image) -->
+          <div id="no-reaction" class="no-heartbreak">
+            <svg class="heartbreak-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Broken Heart">
+              <path
+                d="M58 34C51 21 35 18 24 27C12 37 12 56 24 69L56 102L50 82L61 68L51 53L58 34Z"
+                fill="#E11D48"
+                transform="translate(-4, 2) rotate(-6 40 60)"
+              />
+              <path
+                d="M64 34C71 21 87 18 98 27C110 37 110 56 98 69L64 102L58 82L69 68L59 53L64 34Z"
+                fill="#BE123C"
+                transform="translate(5, 3) rotate(7 80 60)"
+              />
+            </svg>
+            <p class="heartbreak-caption">My heart is broken... please say Yes! 💔</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Our Image & See you on 29.01.2027 -->
+    <section id="screen-final" class="screen">
+      <div class="final-card">
+        <div class="polaroid-frame">
+          <div class="photo-box">
+            <img
+              id="couple-photo"
+              src="526176e8-37d2-4123-96a0-4bf7dfd571a0.png"
+              alt="Our Couple Photo"
+            />
+            <label class="upload-photo-btn" for="photo-upload" title="Choose a different couple photo">
+              📷 Change Photo
+            </label>
+            <input type="file" id="photo-upload" accept="image/*" style="display: none" />
+          </div>
+          <div class="polaroid-caption">Forever Starts With You</div>
+        </div>
+
+        <p class="save-date-label">Save The Date</p>
+        <h2 class="see-you-text">See you on 29.01.2027</h2>
+
+        <!-- Live Countdown to 29.01.2027 -->
+        <div class="countdown-grid" aria-label="Countdown to 29.01.2027">
+          <div class="countdown-item">
+            <span class="countdown-num" id="cd-days">00</span>
+            <span class="countdown-unit">Days</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-num" id="cd-hours">00</span>
+            <span class="countdown-unit">Hours</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-num" id="cd-mins">00</span>
+            <span class="countdown-unit">Mins</span>
+          </div>
+          <div class="countdown-item">
+            <span class="countdown-num" id="cd-secs">00</span>
+            <span class="countdown-unit">Secs</span>
+          </div>
+        </div>
+
+        <div class="heart-divider">♥ ♥ ♥</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ============================================================
+    // PASTE YOUR FORMSPREE URL BELOW TO RECEIVE HER ANSWER BY EMAIL
+    // Example: "https://formspree.io/f/xqazabcd"
+    // ============================================================
+    const FORMSPREE_URL = "https://formspree.io/f/YOUR_FORM_ID";
+
+    function notifyAnswer(answerText) {
+      if (!FORMSPREE_URL || FORMSPREE_URL.includes("YOUR_FORM_ID")) {
+        return;
+      }
+      fetch(FORMSPREE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          proposal_response: answerText,
+          clicked_at: new Date().toLocaleString()
+        })
+      }).catch(() => {});
+    }
+
+    // 1. Gentle Web Audio Chimes
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    const soundToggleBtn = document.getElementById("sound-toggle");
+    const soundIcon = document.getElementById("sound-icon");
+    const soundLabel = document.getElementById("sound-label");
+
+    soundToggleBtn.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      soundIcon.textContent = soundEnabled ? "🔊" : "🔇";
+      soundLabel.textContent = soundEnabled ? "Sound On" : "Muted";
+    });
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playChime(type) {
+      if (!soundEnabled) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      const now = ctx.currentTime;
+      const notes =
+        type === "yes"
+          ? [523.25, 659.25, 783.99, 1046.5, 1318.51]
+          : type === "no"
+          ? [329.63, 293.66]
+          : [440, 554.37, 659.25];
+
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type === "no" ? "triangle" : "sine";
+        osc.frequency.setValueAtTime(freq, now + idx * 0.11);
+
+        gain.gain.setValueAtTime(0.001, now + idx * 0.11);
+        gain.gain.exponentialRampToValueAtTime(0.12, now + idx * 0.11 + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.11 + 0.7);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now + idx * 0.11);
+        osc.stop(now + idx * 0.11 + 0.75);
+      });
+    }
+
+    // 2. Ambient Background Floating Hearts & Rose Petals
+    const ambientContainer = document.getElementById("floating-ambient");
+    const ambientSymbols = ["♥", "🌸", "💕", "🌹", "💗"];
+
+    function createFloatingElement() {
+      const el = document.createElement("span");
+      el.className = "bg-float";
+      const symbol = ambientSymbols[Math.floor(Math.random() * ambientSymbols.length)];
+      el.textContent = symbol;
+      if (symbol === "♥") {
+        el.style.color = "rgba(225, 29, 72, 0.18)";
+      }
+      el.style.left = Math.random() * 100 + "vw";
+      el.style.fontSize = Math.random() * 16 + 14 + "px";
+      const duration = Math.random() * 8 + 8;
+      el.style.animationDuration = duration + "s";
+      ambientContainer.appendChild(el);
+
+      setTimeout(() => {
+        el.remove();
+      }, duration * 1000);
+    }
+
+    setInterval(createFloatingElement, 650);
+    for (let i = 0; i < 10; i++) {
+      setTimeout(createFloatingElement, i * 200);
+    }
+
+    // 3. Screen Navigation & Interactive Proposal Flow
+    const screenSurprise = document.getElementById("screen-surprise");
+    const screenProposal = document.getElementById("screen-proposal");
+    const screenFinal = document.getElementById("screen-final");
+
+    const btnSurprise = document.getElementById("btn-surprise");
+    const giftEmoji = document.getElementById("gift-emoji");
+    const radioYes = document.getElementById("radio-yes");
+    const radioNo = document.getElementById("radio-no");
+    const yesReaction = document.getElementById("yes-reaction");
+    const noReaction = document.getElementById("no-reaction");
+    const btnNextJourney = document.getElementById("btn-next-journey");
+
+    function showScreen(screenToShow) {
+      [screenSurprise, screenProposal, screenFinal].forEach((s) => s.classList.remove("active"));
+      screenToShow.classList.add("active");
+    }
+
+    function openProposal() {
+      playChime("reveal");
+      notifyAnswer("She opened the proposal box!");
+      showScreen(screenProposal);
+    }
+
+    btnSurprise.addEventListener("click", openProposal);
+    giftEmoji.addEventListener("click", openProposal);
+
+    radioYes.addEventListener("change", () => {
+      if (radioYes.checked) {
+        playChime("yes");
+        notifyAnswer("SHE SAID YES! 💍🎉");
+        noReaction.classList.remove("visible");
+        yesReaction.classList.add("visible");
+        startFireworks();
+      }
+    });
+
+    radioNo.addEventListener("change", () => {
+      if (radioNo.checked) {
+        playChime("no");
+        notifyAnswer("She clicked No 💔");
+        yesReaction.classList.remove("visible");
+        noReaction.classList.remove("visible");
+        void noReaction.offsetWidth;
+        noReaction.classList.add("visible");
+        stopFireworks();
+      }
+    });
+
+    btnNextJourney.addEventListener("click", () => {
+      playChime("yes");
+      notifyAnswer("She clicked 'Let’s walk into forever together' and saw 29.01.2027 ❤️");
+      showScreen(screenFinal);
+      startFireworks();
+    });
+
+    // Optional: Upload custom photo right on the screen
+    const photoUpload = document.getElementById("photo-upload");
+    const couplePhoto = document.getElementById("couple-photo");
+
+    photoUpload.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          couplePhoto.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 4. Live Countdown to 29.01.2027
+    const targetDate = new Date("2027-01-29T00:00:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = Math.max(0, targetDate - now);
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("cd-days").textContent = String(days).padStart(2, "0");
+      document.getElementById("cd-hours").textContent = String(hours).padStart(2, "0");
+      document.getElementById("cd-mins").textContent = String(minutes).padStart(2, "0");
+      document.getElementById("cd-secs").textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // 5. Heart & Starburst Fireworks System
+    const canvas = document.getElementById("fireworks-canvas");
+    const ctx = canvas.getContext("2d");
+    let fireworks = [];
+    let particles = [];
+    let fireworksActive = false;
+    let launchInterval = null;
+    let animationFrameId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    const fireworkColors = [
+      "#ff1e56",
+      "#ffac41",
+      "#ff007f",
+      "#ffd700",
+      "#00f5d4",
+      "#ff5d8f",
+      "#c77dff",
+      "#ff4d6d"
+    ];
+
+    class Firework {
+      constructor(startX, startY, targetX, targetY, isHeart) {
+        this.x = startX;
+        this.y = startY;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.isHeart = isHeart;
+        this.speed = 6.5 + Math.random() * 2.5;
+        const angle = Math.atan2(targetY - startY, targetX - startX);
+        this.vx = Math.cos(angle) * this.speed;
+        this.vy = Math.sin(angle) * this.speed;
+        this.color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+        this.trail = [];
+      }
+
+      update() {
+        this.trail.push({ x: this.x, y: this.y });
+        if (this.trail.length > 6) this.trail.shift();
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        const dist = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+        if (dist < 14 || this.y <= this.targetY) {
+          if (this.isHeart) {
+            explodeHeart(this.targetX, this.targetY, this.color);
+          } else {
+            explodeCircle(this.targetX, this.targetY, this.color);
+          }
+          return false;
+        }
+        return true;
+      }
+
+      draw() {
+        ctx.beginPath();
+        if (this.trail.length > 0) {
+          ctx.moveTo(this.trail[0].x, this.trail[0].y);
+          ctx.lineTo(this.x, this.y);
+        }
+        ctx.strokeStyle = this.color;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+    }
+
+    class Particle {
+      constructor(x, y, vx, vy, color) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.color = color;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.014 + 0.011;
+        this.gravity = 0.055;
+        this.size = Math.random() * 2.8 + 1.6;
+      }
+
+      update() {
+        this.vx *= 0.98;
+        this.vy *= 0.98;
+        this.vy += this.gravity;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+        return this.alpha > 0;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function explodeCircle(x, y, baseColor) {
+      const particleCount = 65;
+      for (let i = 0; i < particleCount; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const velocity = Math.random() * 6 + 1.5;
+        const color =
+          Math.random() > 0.3
+            ? baseColor
+            : fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+        particles.push(
+          new Particle(x, y, Math.cos(angle) * velocity, Math.sin(angle) * velocity, color)
+        );
+      }
+    }
+
+    function explodeHeart(x, y, baseColor) {
+      const points = 60;
+      const scale = 0.34;
+      for (let i = 0; i < points; i++) {
+        const t = (Math.PI * 2 * i) / points;
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = -(
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t)
+        );
+        particles.push(new Particle(x, y, hx * scale, hy * scale, baseColor));
+      }
+    }
+
+    function launchRandomFirework() {
+      const startX = canvas.width * (0.2 + Math.random() * 0.6);
+      const startY = canvas.height;
+      const targetX = canvas.width * (0.15 + Math.random() * 0.7);
+      const targetY = canvas.height * (0.12 + Math.random() * 0.36);
+      const isHeart = Math.random() > 0.45;
+      fireworks.push(new Firework(startX, startY, targetX, targetY, isHeart));
+    }
+
+    function animateFireworks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      fireworks = fireworks.filter((fw) => {
+        fw.draw();
+        return fw.update();
+      });
+
+      particles = particles.filter((p) => {
+        p.draw();
+        return p.update();
+      });
+
+      if (fireworksActive || fireworks.length > 0 || particles.length > 0) {
+        animationFrameId = requestAnimationFrame(animateFireworks);
+      } else {
+        animationFrameId = null;
+      }
+    }
+
+    function startFireworks() {
+      if (fireworksActive) return;
+      fireworksActive = true;
+
+      launchRandomFirework();
+      setTimeout(launchRandomFirework, 220);
+      setTimeout(launchRandomFirework, 440);
+
+      launchInterval = setInterval(launchRandomFirework, 650);
+
+      if (!animationFrameId) {
+        animateFireworks();
+      }
+    }
+
+    function stopFireworks() {
+      fireworksActive = false;
+      if (launchInterval) {
+        clearInterval(launchInterval);
+        launchInterval = null;
+      }
+    }
+  </script>
+</body>
+</html>
